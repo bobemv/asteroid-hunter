@@ -8,6 +8,7 @@ TagManager:
   - Destructible
   - DestructibleMarchingCubes
   - Obstacle
+  - Pickup
   layers:
   - Default
   - TransparentFX

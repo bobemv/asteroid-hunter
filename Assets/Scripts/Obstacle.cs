@@ -63,8 +63,7 @@ public class Obstacle : MonoBehaviour
                 transform.position = new Vector3(Random.Range(leftMax, rightMax), Random.Range(downMax, upMax), posZ);
             break;
             case ObstacleType.BigAll:
-                sizesMaxCube = new Vector3((Mathf.Abs(leftMax - rightMax) + 2) / 2, (Mathf.Abs(upMax - downMax) + 2) / 2, 100);
-                sizeCube = 2;
+                sizesMaxCube = new Vector3(Mathf.Abs(leftMax - rightMax) + 2, Mathf.Abs(upMax - downMax), 10);
                 transform.position = new Vector3(leftMax - 1, downMax - 1, posZ);
             break;
         }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Ship : MonoBehaviour
 {
@@ -9,19 +10,21 @@ public class Ship : MonoBehaviour
     private float leftMax = -9f;
     private float upMax = 12f;
     private float downMax = 4f;
-
-    private float desiredRotationZ = -90;
-    private float desiredRotationX = 0;
     private float rotationRightMax = -120f;
     private float rotationLeftMax = -60f;
     private float rotationUpMax = -30f;
     private float rotationDownMax = 30f;
+    private int goldMinerals = 0;
+    private float currentShootTime = 0;
 
     [SerializeField] private Vector3 _startingPosition = new Vector3(0, 8, -30);
     [SerializeField] private Vector3 _startingRotation = new Vector3(180, 0, 270);
     [SerializeField] private float _speed = 5.0f;
     [SerializeField] private float _rotationSpeed = 1.0f;
     [SerializeField] private GameObject _bulletPrefab;
+    [SerializeField] private Text _textGoldMineral;
+    [SerializeField] private GameObject _laserBeamInstance;
+    [SerializeField] private float _shootRate;
     // Start is called before the first frame update
     void Start()
     {
@@ -46,13 +49,11 @@ public class Ship : MonoBehaviour
             move += Vector3.left;
             isMovingLeft = true;
             isMovingHorizontal = true;
-            //desiredRotationZ = rotationLeftMax;
         }
         else if (Input.GetKey(KeyCode.D)) {
             move += Vector3.right;
             isMovingRight = true;
             isMovingHorizontal = true;
-            //desiredRotationZ = rotationRightMax;
         }
         if (Input.GetKey(KeyCode.S)) {
             move += Vector3.down;
@@ -150,23 +151,28 @@ public class Ship : MonoBehaviour
             transform.rotation = Quaternion.Euler(new Vector3(180, y, z));
         }
         
-
-    
-
-        //transform.Translate(transform.right * _speed * Time.deltaTime, Space.World);
-        //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.FromToRotation(Vector3.right, transform.up), _rotationSpeed * Time.deltaTime);
-      
         Shoot();
         CameraMovement();
     }
+    
     float x = 180;
     float y = 0;
     float z = 270;
 
     void Shoot() {
-        if (Input.GetKeyDown(KeyCode.Mouse0)) {
-            Instantiate(_bulletPrefab, transform.position + Vector3.forward + Vector3.left, Quaternion.Euler(270, 0, 0)).GetComponent<Bullet>().SetDir(-transform.forward);
-            Instantiate(_bulletPrefab, transform.position + Vector3.forward + Vector3.forward, Quaternion.Euler(270, 0, 0)).GetComponent<Bullet>().SetDir(-transform.forward);
+        currentShootTime += Time.deltaTime;
+        if (Input.GetKey(KeyCode.Mouse0)) {
+            if (currentShootTime > _shootRate) {
+                currentShootTime = 0;
+                Instantiate(_bulletPrefab, transform.position + Vector3.forward + Vector3.left, Quaternion.Euler(270, 0, 0)).GetComponent<Bullet>().SetDir(-transform.forward);
+                Instantiate(_bulletPrefab, transform.position + Vector3.forward + Vector3.right, Quaternion.Euler(270, 0, 0)).GetComponent<Bullet>().SetDir(-transform.forward);
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Mouse1)) {
+            _laserBeamInstance.SetActive(true);
+        }
+        if (Input.GetKeyUp(KeyCode.Mouse1)) {
+            _laserBeamInstance.SetActive(false);
         }
     }
 
@@ -187,6 +193,11 @@ public class Ship : MonoBehaviour
         if (other.tag == "Obstacle") {
             Destroy(gameObject);
 
+        }
+        if (other.tag == "Pickup") {
+            goldMinerals++;
+            _textGoldMineral.text = "Gold minerals collected: " + goldMinerals;
+            Destroy(other.gameObject);
         }
     }
 }
