@@ -35,7 +35,7 @@ public class Ship : MonoBehaviour
 
     [Header("Sounds")]
 
-    [SerializeField] private GameObject _bulletShootingSound;
+    [SerializeField] private GameObject _explosionSound;
     // Start is called before the first frame update
     void Start()
     {
@@ -120,12 +120,13 @@ public class Ship : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other) {
         if (other.tag == "Obstacle") {
+            Instantiate(_explosionSound, transform.position, Quaternion.identity);
             Destroy(gameObject);
 
         }
         if (other.tag == "Pickup") {
             goldMinerals++;
-            _textGoldMineral.text = "Gold minerals collected: " + goldMinerals;
+            _textGoldMineral.text = "Gold Minerals: " + goldMinerals;
             Destroy(other.gameObject);
         }
     }

@@ -909,7 +909,7 @@ MonoBehaviour:
     type: 3}
   _textGoldMineral: {fileID: 1721493368}
   _laserBeamInstance: {fileID: 1546826414}
-  _shootRate: 0.2
+  _shootRate: 0.5
   _flashLights:
   - {fileID: 135395424}
   - {fileID: 1753629097}
@@ -919,7 +919,8 @@ MonoBehaviour:
   - {x: 0, y: 1, z: 0}
   lengthRayCheckFlashlight: 20
   turnOffLightsTime: 1
-  _bulletShootingSound: {fileID: 0}
+  _explosionSound: {fileID: 1232768127627540761, guid: 0fc09150d02902a42952b327a6b25356,
+    type: 3}
 --- !u!64 &1304501662
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1160,7 +1161,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: c93c3c1a76aab784f9a3f7c146904e15, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1183,7 +1184,7 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 3.05}
+  - {x: 0, y: 0, z: 0.41}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -1413,19 +1414,19 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 73c2ae1f980c33e42a5ff992dea7debd, type: 3}
     m_FontSize: 24
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
     m_Alignment: 0
     m_AlignByGeometry: 0
-    m_RichText: 1
+    m_RichText: 0
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Gold minerals collected: 0'
+  m_Text: 'Gold Minerals: 0'
 --- !u!222 &1721493369
 CanvasRenderer:
   m_ObjectHideFlags: 0
