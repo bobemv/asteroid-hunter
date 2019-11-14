@@ -142,12 +142,15 @@ public class MarchingCubes : MonoBehaviour
         Vector2[] uvs = new Vector2[verticesMesh.Count];
         Vector3[] normals = mesh.normals;
         for (int i = 0; i < verticesMesh.Count; i++) {
+            Vector3 normal = normals[i];
+            normal = new Vector3(Mathf.Abs(normal.x), Mathf.Abs(normal.y), Mathf.Abs(normal.z));
+            normal = new Vector3(normal.x / normal.magnitude, normal.y / normal.magnitude, normal.z / normal.magnitude);
 
             Vector2 uvFront = ResizeUV(new Vector2(verticesMesh[i].x, verticesMesh[i].y));
             Vector2 uvSide = ResizeUV(new Vector2(verticesMesh[i].z, verticesMesh[i].y));
             Vector2 uvTop = ResizeUV(new Vector2(verticesMesh[i].x, verticesMesh[i].z));
 
-            uvs[i] = uvFront + uvSide + uvTop;
+            uvs[i] = uvFront * normal.z + uvSide * normal.x + uvTop * normal.y;
         }
         mesh.uv = uvs;
         meshCollider.sharedMesh = mesh;
