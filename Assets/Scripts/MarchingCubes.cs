@@ -28,14 +28,15 @@ public class MarchingCubes : MonoBehaviour
     [SerializeField] private float sizeCube = 0.5f;
     private Cube[, ,] cubes;
     private CubeVertice[, ,] cubeVertices;
+    private Vector2 offsetUvs;
     // Start is called before the first frame update
-
     public void CreateModel(Vector3 _sizesMaxCube, float _sizeCube)
     {
         sizeMaxCubeX = (int)_sizesMaxCube.x;
         sizeMaxCubeY = (int)_sizesMaxCube.y;
         sizeMaxCubeZ = (int)_sizesMaxCube.z;
         sizeCube = _sizeCube;
+        offsetUvs = new Vector2(Random.Range(0, 1f), Random.Range(0, 1f));
         mesh = GetComponent<MeshFilter>().mesh;
         meshCollider = GetComponent<MeshCollider>();
         meshCollider.sharedMesh = mesh;
@@ -83,6 +84,7 @@ public class MarchingCubes : MonoBehaviour
     public void RebuildMesh() {
         List<Vector3> verticesMesh = new List<Vector3>();
         List<int> trianglesMesh = new List<int>();
+        List<Vector2> uvsMesh = new List<Vector2>();
 
         for (int k = 0; k < sizeMaxCubeZ; k++) {
             for (int j = 0; j < sizeMaxCubeY; j++) {
@@ -112,6 +114,7 @@ public class MarchingCubes : MonoBehaviour
 
 						edges[edgeIndex] = verticesMesh.Count;
 						verticesMesh.Add(midPoint);
+                        //uvsMesh.Add(new Vector2(((midPoint.x % 10) / 10 + offsetUvs.x), ((midPoint.y % 10) / 10 + offsetUvs.y)));
 
                     }
 
@@ -128,13 +131,30 @@ public class MarchingCubes : MonoBehaviour
         mesh.Clear();
         mesh.vertices = verticesMesh.ToArray();
         mesh.triangles = trianglesMesh.ToArray();
+        //mesh.uv = uvsMesh.ToArray();
 
 
         mesh.RecalculateBounds();
         mesh.RecalculateNormals();
         mesh.RecalculateTangents();
 
+
+        Vector2[] uvs = new Vector2[verticesMesh.Count];
+        Vector3[] normals = mesh.normals;
+        for (int i = 0; i < verticesMesh.Count; i++) {
+
+            Vector2 uvFront = ResizeUV(new Vector2(verticesMesh[i].x, verticesMesh[i].y));
+            Vector2 uvSide = ResizeUV(new Vector2(verticesMesh[i].z, verticesMesh[i].y));
+            Vector2 uvTop = ResizeUV(new Vector2(verticesMesh[i].x, verticesMesh[i].z));
+
+            uvs[i] = uvFront + uvSide + uvTop;
+        }
+        mesh.uv = uvs;
         meshCollider.sharedMesh = mesh;
+    }
+
+    Vector2 ResizeUV(Vector2 position) {
+        return new Vector2(((position.x % 20) / 20 + offsetUvs.x), ((position.y % 20) / 20 + offsetUvs.y));
     }
 
     public void Destruction(Vector3 impact, float radiusImpact) {

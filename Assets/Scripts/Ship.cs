@@ -16,177 +16,106 @@ public class Ship : MonoBehaviour
     private float rotationDownMax = 30f;
     private int goldMinerals = 0;
     private float currentShootTime = 0;
-
+    private float currentTurnOffLightsTime = 0;
     [SerializeField] private Vector3 _startingPosition = new Vector3(0, 8, -30);
-    [SerializeField] private Vector3 _startingRotation = new Vector3(180, 0, 270);
     [SerializeField] private float _speed = 5.0f;
     [SerializeField] private float _rotationSpeed = 1.0f;
     [SerializeField] private GameObject _bulletPrefab;
     [SerializeField] private Text _textGoldMineral;
     [SerializeField] private GameObject _laserBeamInstance;
     [SerializeField] private float _shootRate;
+    [SerializeField] private List<GameObject> _flashLights;
+    [SerializeField] private Vector3[] dirsToCheck = {
+        new Vector3(0.2f, 0.3f, 1),
+        new Vector3(-0.2f, 0.3f, 1),
+        new Vector3(0, 1, 0),
+    };
+    [SerializeField] private float lengthRayCheckFlashlight = 20f;
+    [SerializeField] private float turnOffLightsTime = 1f;
+
+    [Header("Sounds")]
+
+    [SerializeField] private GameObject _bulletShootingSound;
     // Start is called before the first frame update
     void Start()
     {
         transform.position = _startingPosition;
-        transform.rotation = Quaternion.Euler(x, y, z);
-        //transform.eulerAngles = _startingRotation;
     }
 
     // Update is called once per frame
     void Update()
     {
         Vector3 move = Vector3.zero;
-        Vector3 rotate = Vector3.zero;
-        bool isMovingLeft = false;
-        bool isMovingRight = false;
-        bool isMovingUp= false;
-        bool isMovingDown = false;
-        bool isMovingHorizontal= false;
-        bool isMovingVertical = false;
+        Vector3 rotateHorizontal = Vector3.right;
+        Vector3 rotateVertical = Vector3.up;
 
         if (Input.GetKey(KeyCode.A)) {
             move += Vector3.left;
-            isMovingLeft = true;
-            isMovingHorizontal = true;
+            rotateHorizontal = new Vector3(1, 1, 0);
         }
         else if (Input.GetKey(KeyCode.D)) {
             move += Vector3.right;
-            isMovingRight = true;
-            isMovingHorizontal = true;
+            rotateHorizontal = new Vector3(1, -1, 0);            
         }
         if (Input.GetKey(KeyCode.S)) {
             move += Vector3.down;
-            isMovingDown = true;
-            isMovingVertical = true;
+            rotateVertical = new Vector3(0, 1, 1);
         }
         else if (Input.GetKey(KeyCode.W)) {
             move += Vector3.up;
-            isMovingUp = true;
-            isMovingVertical = true;
+            rotateVertical = new Vector3(0, 1, -1);
         }
 
         Vector3 previousPosition = transform.position;
         transform.Translate(move * _speed * Time.deltaTime, Space.World);
-
+        
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.FromToRotation(Vector3.right, rotateHorizontal) * Quaternion.FromToRotation(Vector3.forward, rotateVertical), Time.deltaTime * _rotationSpeed);
+        
         if (transform.position.x > rightMax) {
             transform.position = new Vector3(rightMax, transform.position.y, transform.position.z);
-            isMovingRight = false;
         }
         if (transform.position.x < leftMax) {
             transform.position = new Vector3(leftMax, transform.position.y, transform.position.z);
-            isMovingLeft = false;
         }
         if (transform.position.y > upMax) {
             transform.position = new Vector3(transform.position.x, upMax, transform.position.z);
-            isMovingUp = false;
         }
         if (transform.position.y < downMax) {
             transform.position = new Vector3(transform.position.x, downMax, transform.position.z);
-            isMovingDown = false;
         }
 
-        if (isMovingLeft) {
-            rotate += Vector3.back;
-        }
-        else if (isMovingRight) {
-            rotate += Vector3.forward;
-        }
-        else {
-            rotate += z > 270 ? Vector3.back : Vector3.forward;
-        }
-        if (isMovingDown) {
-            rotate += Vector3.right;
-        }
-        else if (isMovingUp) {
-            rotate += Vector3.left;
-        }
-        else {
-            rotate += x > 180 ? Vector3.left : Vector3.right;
-        }
-
-        if (!(isMovingHorizontal && isMovingVertical)) {
-            rotate += y > 0 ? Vector3.down : Vector3.up;
-        }
-
-        //Vector3 previousRotation = transform.eulerAngles;
-
-        //transform.Rotate(rotate * _rotationSpeed * Time.deltaTime);
-        x += rotate.x * _rotationSpeed * Time.deltaTime;
-        y += rotate.y * _rotationSpeed * Time.deltaTime;
-        z += rotate.z * _rotationSpeed * Time.deltaTime;
-        transform.rotation = Quaternion.Euler(x, y, z);
-        //Debug.Log("transform.eulerAngles: " + transform.eulerAngles);
-        if (isMovingLeft && z < 240) {
-            //Debug.Log("Dntroo");
-            z = 240;
-            transform.rotation = Quaternion.Euler(new Vector3(x, y, 240));
-        }
-        if (isMovingRight && z > 300) {
-            //Debug.Log("Dntroo");
-            z = 300;
-            transform.rotation = Quaternion.Euler(new Vector3(x, y, 300));
-        }
-        if (isMovingDown && x > 210) {
-            //Debug.Log("Dntroo");
-            x = 210;
-            transform.rotation = Quaternion.Euler(new Vector3(210, y, z));
-        }
-        if (isMovingUp && x < 150) {
-            //Debug.Log("Dntroo");
-            x = 150;
-
-            transform.rotation = Quaternion.Euler(new Vector3(150, y, z));
-        }
-        if (!(isMovingHorizontal && isMovingVertical) && Mathf.Abs(y) < 2) {
-            y = 0;
-            transform.rotation = Quaternion.Euler(new Vector3(x, 0, z));
-        }
-        if (!isMovingHorizontal && Mathf.Abs(z - 270) < 2) {
-            z = 270;
-            transform.rotation = Quaternion.Euler(new Vector3(x, y, 270));
-        }
-        if (!isMovingVertical && Mathf.Abs(x - 180) < 2) {
-            x = 180;
-            transform.rotation = Quaternion.Euler(new Vector3(180, y, z));
-        }
-        
         Shoot();
         CameraMovement();
+        Flashlights();
     }
-    
-    float x = 180;
-    float y = 0;
-    float z = 270;
 
     void Shoot() {
         currentShootTime += Time.deltaTime;
         if (Input.GetKey(KeyCode.Mouse0)) {
             if (currentShootTime > _shootRate) {
                 currentShootTime = 0;
-                Instantiate(_bulletPrefab, transform.position + Vector3.forward + Vector3.left, Quaternion.Euler(270, 0, 0)).GetComponent<Bullet>().SetDir(-transform.forward);
-                Instantiate(_bulletPrefab, transform.position + Vector3.forward + Vector3.right, Quaternion.Euler(270, 0, 0)).GetComponent<Bullet>().SetDir(-transform.forward);
+                Instantiate(_bulletPrefab, transform.position + Vector3.forward + Vector3.left, Quaternion.Euler(270, 0, 0)).GetComponent<Bullet>().SetDir(-transform.up);
+                Instantiate(_bulletPrefab, transform.position + Vector3.forward + Vector3.right, Quaternion.Euler(270, 0, 0)).GetComponent<Bullet>().SetDir(-transform.up);
             }
         }
-        if (Input.GetKeyDown(KeyCode.Mouse1)) {
+        if (Input.GetKey(KeyCode.Mouse1)) {
             _laserBeamInstance.SetActive(true);
         }
-        if (Input.GetKeyUp(KeyCode.Mouse1)) {
+        else {
             _laserBeamInstance.SetActive(false);
         }
     }
 
     bool isCameraBehind = true;
-
     void CameraMovement() {
         if (Input.GetKeyDown(KeyCode.Space)) {
             isCameraBehind = !isCameraBehind;
         }
         if (isCameraBehind) {
-            Camera.main.transform.position = Vector3.Slerp(Camera.main.transform.position, new Vector3(transform.position.x, transform.position.y + 3, -39.7f), 5 * Time.deltaTime);
+            Camera.main.transform.position = Vector3.Slerp(Camera.main.transform.position, new Vector3(transform.position.x, transform.position.y + 1, -39.7f), 5 * Time.deltaTime);
         }
         else {
-            Camera.main.transform.position = Vector3.Slerp(Camera.main.transform.position, transform.position + Vector3.forward, 5 * Time.deltaTime);
+            Camera.main.transform.position = Vector3.Slerp(Camera.main.transform.position, transform.position + Vector3.forward * 2f, 5 * Time.deltaTime);
         }
     }
     private void OnTriggerEnter(Collider other) {
@@ -199,5 +128,41 @@ public class Ship : MonoBehaviour
             _textGoldMineral.text = "Gold minerals collected: " + goldMinerals;
             Destroy(other.gameObject);
         }
+    }
+
+    void Flashlights() {
+        bool isShipInAsteroid = true;
+
+        for (int i = 0; i < dirsToCheck.Length; i++) {
+            RaycastHit hit;
+            Physics.Raycast(transform.position + Vector3.forward, dirsToCheck[i], out hit, lengthRayCheckFlashlight);
+            if (hit.collider == null) {
+                isShipInAsteroid = false;
+            }
+        }
+
+        if (!isShipInAsteroid) {
+            currentTurnOffLightsTime += Time.deltaTime;
+            if (currentTurnOffLightsTime > turnOffLightsTime) {
+                SetLightsOff();
+            }
+        }
+        else {
+            SetLightsOn();
+            currentTurnOffLightsTime = 0;
+        }
+
+    }
+
+    void SetLightsOn() {
+        _flashLights.ForEach(flashLight => {
+            flashLight.SetActive(true);
+        });
+    }
+
+    void SetLightsOff() {
+        _flashLights.ForEach(flashLight => {
+            flashLight.SetActive(false);
+        });
     }
 }
