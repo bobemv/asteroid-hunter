@@ -48,11 +48,6 @@ public class LaserBeam : MonoBehaviour
                 laserLength = hit.distance;
 
                 hit.collider.GetComponent<MarchingCubes>().Destruction(hit.point, _radiusDestruction);
-                RaycastHit next;
-                Physics.Raycast(hit.point, Vector3.forward, out next, _radiusDestruction);
-                if (next.collider != null && next.collider.tag == "Obstacle" && next.collider != hit.collider) {
-                    next.collider.gameObject.GetComponent<MarchingCubes>().Destruction(hit.point, _radiusDestruction);
-                }
                 Instantiate(_explosionSoundPrefab, hit.point, Quaternion.identity);
             }
             linePositions[1] = new Vector3(0, 0, laserLength / transform.parent.localScale.y);
