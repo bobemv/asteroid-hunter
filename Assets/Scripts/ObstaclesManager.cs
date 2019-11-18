@@ -106,8 +106,8 @@ public class ObstaclesManager : MonoBehaviour
 
     Coroutine SpawnBigAsteroid() {
 
-        int asteroidSize = 20;
-        float spawnRate = 0.4f;
+        int asteroidSize = 40;
+        float spawnRate = 0.2f;
 
         ObstacleType[] obstacleCourse = new ObstacleType[asteroidSize];
         for (int i = 0; i < asteroidSize; i++) {

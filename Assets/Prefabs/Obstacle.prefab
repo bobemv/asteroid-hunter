@@ -95,6 +95,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 20
+  _sizeCube: 0.5
   isInUse: 0
 --- !u!114 &-8633982845845784803
 MonoBehaviour:

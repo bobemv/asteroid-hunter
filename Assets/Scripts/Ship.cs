@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Ship : MonoBehaviour
 {
@@ -32,6 +33,7 @@ public class Ship : MonoBehaviour
     };
     [SerializeField] private float lengthRayCheckFlashlight = 20f;
     [SerializeField] private float turnOffLightsTime = 1f;
+    [SerializeField] private GameManager _gameManager;
 
     [Header("Sounds")]
 
@@ -121,6 +123,7 @@ public class Ship : MonoBehaviour
     private void OnTriggerEnter(Collider other) {
         if (other.tag == "Obstacle") {
             Instantiate(_explosionSound, transform.position, Quaternion.identity);
+            _gameManager.isGameOver = true;
             Destroy(gameObject);
 
         }

@@ -8,6 +8,8 @@ public class Obstacle : MonoBehaviour
     // Start is called before the first frame update
 
     [SerializeField] private float _speed;
+    [SerializeField] private float _sizeCube = 1f;
+
     public bool isInUse = false;
 
     private float rightMax = 9f;
@@ -15,7 +17,6 @@ public class Obstacle : MonoBehaviour
     private float upMax = 12f;
     private float downMax = 4f;
 
-    private float sizeCube = 1f;
 
     private float posZ = 60;
     private Vector3 sizesMaxCube;
@@ -27,7 +28,8 @@ public class Obstacle : MonoBehaviour
             return;
         }
         SetSizeByObstacleType(type);
-        marchingCubes.CreateModel(sizesMaxCube, sizeCube);
+        sizesMaxCube /= _sizeCube;
+        marchingCubes.CreateModel(sizesMaxCube, _sizeCube);
     }
 
     // Update is called once per frame
@@ -63,7 +65,7 @@ public class Obstacle : MonoBehaviour
                 transform.position = new Vector3(Random.Range(leftMax, rightMax), Random.Range(downMax, upMax), posZ);
             break;
             case ObstacleType.BigAll:
-                sizesMaxCube = new Vector3(Mathf.Abs(leftMax - rightMax) + 2, Mathf.Abs(upMax - downMax), 10);
+                sizesMaxCube = new Vector3(Mathf.Abs(leftMax - rightMax) + 2, Mathf.Abs(upMax - downMax), 5);
                 transform.position = new Vector3(leftMax - 1, downMax - 1, posZ);
             break;
         }
