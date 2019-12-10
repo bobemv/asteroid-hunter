@@ -1,5 +1,21 @@
 # asteroid-hunter
+
+![](gifs\AsteroidHunterPortfolioGIF20191203.gif)
+
 Little runner about a starship recollecting coins/objectives while dodging and destroying asteroids. Destruction is being done with 3D Marching Cubes. Starting point given by @josemorval: https://github.com/josemorval/MarchingCubes-Unity/
+
+To understand the algorithm, these resources were essential too:
+
+
+
+## Things I have learnt/done
+
+- 3D Marching Cubes, building a mesh from it and destructing it little by little. These resources helped me to understand it: 
+    - "Coding Aventure: Marching Cubes" by Sebastian Lague. Link: https://www.youtube.com/watch?v=M3iI2l0ltbE
+    - "Marching Cubes Animation | Algorithms Visualized" by Algorithms Visualized. Link: https://www.youtube.com/watch?v=B_xk71YopsA
+- UV Mapping to procedural meshes (Triplannar mapping).
+- Understanding Quaternions and how to properly use them.
+- Using Raycasting to detect surroundings of an object.
 
 
 ## Assets used
@@ -27,3 +43,7 @@ Explosion when asteroid hit: Space Explosion by morganpurkis. Link: https://free
 Explosion when spaceship destroyed: explosion13 by V-ktor. Link: https://freesound.org/people/V-ktor/sounds/435416/
 
 Background music: LIGHT YEARS_V001 by Eric Matyas. Link: https://soundimage.org/sci-fi/
+
+### Font:
+
+UI Font: Space 1 by Xin Ch. Link: https://www.dafont.com/es/space-1.font
