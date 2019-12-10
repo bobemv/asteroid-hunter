@@ -1,6 +1,6 @@
 # asteroid-hunter
 
-![](gifs\AsteroidHunterPortfolioGIFLow20191203.gif)
+<img src='./gifs/AsteroidHunterPortfolioGIFLow20191203.gif'>
 
 Little runner about a starship recollecting coins/objectives while dodging and destroying asteroids. Destruction is being done with 3D Marching Cubes. Starting point given by @josemorval: https://github.com/josemorval/MarchingCubes-Unity/
 
